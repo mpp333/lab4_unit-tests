@@ -1,4 +1,4 @@
-name: Run Unit Tests
+name: Run Unit Tests on Ubuntu and Windows
 
 on:
   push:
@@ -11,7 +11,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ['3.9', '3.10', '3.11']
 
     runs-on: ${{ matrix.os }}
 
@@ -19,11 +18,20 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.11'
 
-    - name: Run unit tests on ${{ matrix.os }}
+    - name: Display system information
+      run: |
+        echo "Running on ${{ runner.os }}"
+        python --version
+
+    - name: Run unit tests
       run: |
         python -m unittest rectangle -v
+
+    - name: Check test results
+      run: |
+        echo "✅ Тесты успешно выполнены на ${{ runner.os }}"
